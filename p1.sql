@@ -366,7 +366,7 @@ AND s.sem="2";
 | 4vp21mc69 | Kartik |
 +-----------+--------+
 
-2.List the students who are not borrowed any books.
+2. List the students who are not borrowed any books.
 select distinct name from student
 where usn not in (select usn from borrow);
 +------------+
@@ -379,7 +379,7 @@ where usn not in (select usn from borrow);
 | Moksit     |
 +------------+
 
-3.Display the USN, Student name, Branch_name, Author_name, Book_name,Books_Borrowed_Date of 2nd sem MCA Students who borrowed books.
+3. Display the USN, Student name, Branch_name, Author_name, Book_name,Books_Borrowed_Date of 2nd sem MCA Students who borrowed books.
 select student.usn,student.name,branch.name,bookname,aname,borrowed_date
 from student,book,branch,borrow,author
 where student.usn=borrow.usn
@@ -421,7 +421,7 @@ having count(usn)>=2);
 | 4vp21mc05  | Akash    | Kokkada  |       101 |    1 |
 +------------+----------+----------+-----------+------+
 
-6.Display the Book names in descending order of their names
+7. Display the Book names in descending order of their names
 select bookname from book 
 order by bookname desc;
 
