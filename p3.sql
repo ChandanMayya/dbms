@@ -244,7 +244,7 @@ mysql> select * from maatch;
 insert into mom
 (player_id,match_id)
 values
-(102,'m1');
+(106,'m3');
 
 insert into mom
 (player_id,match_id)
@@ -265,7 +265,16 @@ mysql> select * from mom;
 | 104       | m3       |
 +-----------+----------+
 
+mysql> select stadium_id from maatch group by stadium_id order by max(stadium_id);
+
+select * from STADIUM where stadium_id in (select stadium_id from maatch GROUP BY stadium_id);
+select m.stadium_id,count(m.match_id) FROM maatch m group by m.stadium_id order by count(match_id) desc;
+select stadium_id,count(match_id) from maatch group by stadium_id;
+select stadium_id,count(match_id) from maatch group by stadium_id;
 --------------------   QUERIES --------------------
+
+1. Display the youngest player (in terms of age) Name, Team name, age in which he belongs of
+the tournament.
 
 select name,player_id,min(age)
 from player
@@ -287,3 +296,64 @@ select team_id
 from player
 group by(team_id)
 order by min(age));
+
+select name,team_name,age from player p,team t where p.team_id=t.team_id and age=(select min(age) from player);
++---------+---------------+------+
+| name    | team_name     | age  |
++---------+---------------+------+
+| Kodanda | Wakra Rockers |   21 |
++---------+---------------+------+
+
+
+ii. List the details of the stadium where the maximum number of matches were played.
+
+select * from STADIUM where stadium_id =(select stadium_id from maatch group by stadium_id order by count(match_id)desc limit 1);
++------------+--------------+--------+-----------+---------+
+| stadium_id | sname        | city   | area_name | pincode |
++------------+--------------+--------+-----------+---------+
+| sd1        | KeshavaKrupa | Puttur | Nagara    |  574203 |
++------------+--------------+--------+-----------+---------+
+
+
+
+iii. List the details of the player who is not a captain but got the man_of _match award at least
+in two matches.
+
+mysql> select * from player where player_id in(select player_id from mom 
+ where player_id not in(select captian from team)
+ group by player_id having count(player_id)>=2  );
+
++-----------+-----------+----------+------+---------+
+| player_id | name      | phone    | age  | team_id |
++-----------+-----------+----------+------+---------+
+| 106       | Kodiyappa | 87987865 |   27 | 501     |
++-----------+-----------+----------+------+---------+
+
+iv. Display the Team details who won the maximum matches.
+
+select * from team where team_id=(select wteam_id from maatch group by wteam_id order by count(wteam_id)desc limit 1);
++---------+---------------+-------+--------+---------+
+| team_id | team_name     | city  | coach  | captian |
++---------+---------------+-------+--------+---------+
+| 500     | Wakra Rockers | Perla | Mayura | 102     |
++---------+---------------+-------+--------+---------+
+
+
+v. Display the team name where all its won matches played in the same stadium.
+select stadium_id,wteam_id from maatch group by(stadium_id);
+
+select team_name from team 
+where team_id in(
+    select wteam_id from maatch group by stadium_id,wteam_id
+    having count(*) in (select count (wteam_id) from maatch group by wteam_id)
+);
+
+select * from team where team_id = (
+    select wteam_id from maatch 
+    group by wteam_id having count(stadium_id)>=2
+);
++---------+---------------+-------+--------+---------+
+| team_id | team_name     | city  | coach  | captian |
++---------+---------------+-------+--------+---------+
+| 500     | Wakra Rockers | Perla | Mayura | 102     |
++---------+---------------+-------+--------+---------+
