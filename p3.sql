@@ -348,12 +348,13 @@ where team_id in(
     having count(*) in (select count (wteam_id) from maatch group by wteam_id)
 );
 
-select * from team where team_id = (
+select team_name from team where team_id in (
     select wteam_id from maatch 
     group by wteam_id having count(stadium_id)>=2
 );
-+---------+---------------+-------+--------+---------+
-| team_id | team_name     | city  | coach  | captian |
-+---------+---------------+-------+--------+---------+
-| 500     | Wakra Rockers | Perla | Mayura | 102     |
-+---------+---------------+-------+--------+---------+
++---------------+
+| team_name     |
++---------------+
+| Wakra Rockers |
++---------------+
+
