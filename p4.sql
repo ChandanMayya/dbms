@@ -225,9 +225,9 @@ mysql> SELECT * FROM MAIL;
 | T3         | geethagovinda@gmail.com  |
 +------------+--------------------------+
 
-SELECT STATE FROM TPLACE WHERE PLACE_ID=(
-    SELECT PLACE_ID FROM VISIT GROUP BY COUNT(PLACE_ID);
-)
+
+Queries:
+i. List the state name which is having maximum number of tourist places.
 
 SELECT STATE,COUNT(PLACE_ID) 
 FROM TPLACE 
@@ -239,6 +239,8 @@ LIMIT 1;
 +-----------+-----------------+
 | KARNATAKA |               5 |
 +-----------+-----------------+
+
+ii. List details of Tourist place where maximum number of tourists visited.
 
 SELECT TP.PLACE_ID, TP.PNAME, TP.STATE, COUNT(V.TOURIST_ID) 
 FROM TPLACE TP,VISIT V
@@ -252,6 +254,8 @@ LIMIT 1;
 +----------+------------+-----------+---------------------+
 | TP2      | MANZARABAD | KARNATAKA |                   4 |
 +----------+------------+-----------+---------------------+
+
+iii. List the details of tourists visited all tourist places of the state “KARNATAKA”.
 
 SELECT * FROM TOURIST
 WHERE TOURIST_ID IN(
@@ -270,3 +274,45 @@ WHERE TOURIST_ID IN(
 | T2         | AKASHA |  22 | INDIA     |
 | T3         | GEETHA |  22 | SRI LANKA |
 +------------+--------+-----+-----------+
+
+iv. Display the details of the tourists visited at least one tourist place of the state, but visited
+all states tourist places.
+
+select DISTINCT STATE,TOURIST.TOURIST_ID
+from TPLACE, VISIT, TOURIST
+where VISIT.TOURIST_ID=TOURIST.TOURIST_ID 
+AND VISIT.PLACE_ID=TPLACE.PLACE_ID;
+
+
+
+SELECT * FROM TOURIST WHERE TOURIST_ID IN(
+SELECT TOURIST_ID 
+FROM VISIT, TPLACE 
+WHERE VISIT.PLACE_ID=TPLACE.PLACE_ID
+GROUP BY(TOURIST_ID)
+havinG COUNT(DISTINCT STATE)
+IN (SELECT COUNT(DISTINCT STATE) FROM TPLACE)
+);
+
++------------+--------+-----+---------+
+| TOURIST_ID | TNAME  | AGE | COUNTRY |
++------------+--------+-----+---------+
+| T1         | MAYURA |  21 | INDIA   |
+| T2         | AKASHA |  22 | INDIA   |
++------------+--------+-----+---------+
+
+SELECT * FROM TPLACE 
+WHERE PLACE_ID IN( SELECT PLACE_ID FROM VISIT,TOURIST
+WHERE VISIT.TOURIST_ID=TOURIST.TOURIST_ID
+GROUP BY PLACE_ID
+havinG COUNT(DISTINCT COUNTRY)=(
+SELECT COUNT(DISTINCT COUNTRY) 
+FROM TOURIST)
+);
+
++----------+------------+-----------+-----+------------+
+| PLACE_ID | PNAME      | STATE     | KM  | HISTORY    |
++----------+------------+-----------+-----+------------+
+| TP2      | MANZARABAD | KARNATAKA | 400 | KINGS FORT |
++----------+------------+-----------+-----+------------+
+
