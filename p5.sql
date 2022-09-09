@@ -212,18 +212,81 @@ values
 i. List the details of the candidates who are contesting from more than one constituencies
 which are belongs to different states.
 
+select * from CANDIDATE 
+where CAND_ID in (
+    select CAND_ID 
+    from CONTEST 
+    join CONSTITUENCY 
+    on CONTEST.CONST_ID=CONSTITUENCY.CONST_ID
+    group by CAND_ID 
+    having count(distinct(STATE))>1
+);
 
 ii. Display the state name having maximum number of constituencies.
 
+select STATE,count(CONST_ID) 
+from CONSTITUENCY 
+group by STATE 
+order by count(CONST_ID)desc limit 1;
+
++-----------+-----------------+
+| STATE     | count(CONST_ID) |
++-----------+-----------------+
+| KARNATAKA |               2 |
++-----------+-----------------+
 
 iii. Create a stored procedure to insert the tuple into the voter table by checking the voter
 age. If voters age is at least 18 years old, then insert the tuple into the voter else display the
 “Not an eligible voter msg” .
 
+DELIMITER //
+create procedure abc(IN vid char(10),IN Vname varchar(25),IN age int(10),IN address varchar(20))
+begin
+declare msg varchar(40);
+if age>=18 then
+insert into VOTER (VOTER_ID,NAME,AGE,ADDR)
+values(vid,Vname,age,address);
+set msg="row inserted";
+else
+set msg="voter not eligible";
+end if;
+select msg; 
+end//
+DELIMITER ;
+
+SOURCE proc2.sql
+call abc('v9','MEROLIN','25','PUTTUR');
++--------------+
+| msg          |
++--------------+
+| row inserted |
++--------------+
+
+call abc('v90','MEROLIN','2','PUTTUR');
++--------------------+
+| msg                |
++--------------------+
+| voter not eligible |
++--------------------+
+
 
 iv. Create a stored procedure to display the number_of_voters in the specified constituency.
 Where the constituency name is passed as an argument to the stored procedure
 
+DELIMITER //
+create PROCEDURE new1(csname varchar(20))
+begin
+select NO_OF_VOTES from CONSTITUENCY where csname=name;
+end //
+DELIMITER ;
+
+source proc1.sql
+call new1('PUTTUR');
++-------------+
+| NO_OF_VOTES |
++-------------+
+|         503 |
++-------------+
 
 v. Create a TRIGGER to UPDATE the count of “ Number_of_voters” of the respective
 constituency in “CONSTITUENCY” table , AFTER inserting a tuple into the “VOTERS” table.
