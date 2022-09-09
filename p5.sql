@@ -169,6 +169,8 @@ insert into VOTER
 values
 ('V7','KAVYA','25','PERLA','CT2','NC1');
 
+
+
 +----------+---------+------+---------+----------+---------+
 | VOTER_ID | NAME    | AGE  | ADDR    | CONST_ID | CAND_ID |
 +----------+---------+------+---------+----------+---------+
@@ -196,3 +198,54 @@ insert into CONTEST
 values
 ('CT3','NC1');
 
++----------+---------+
+| CONST_ID | CAND_ID |
++----------+---------+
+| CT1      | NC1     |
+| CT2      | NC1     |
+| CT3      | NC1     |
++----------+---------+
+
+
+------------QUERIES----------------------
+
+i. List the details of the candidates who are contesting from more than one constituencies
+which are belongs to different states.
+
+
+ii. Display the state name having maximum number of constituencies.
+
+
+iii. Create a stored procedure to insert the tuple into the voter table by checking the voter
+age. If voters age is at least 18 years old, then insert the tuple into the voter else display the
+“Not an eligible voter msg” .
+
+
+iv. Create a stored procedure to display the number_of_voters in the specified constituency.
+Where the constituency name is passed as an argument to the stored procedure
+
+
+v. Create a TRIGGER to UPDATE the count of “ Number_of_voters” of the respective
+constituency in “CONSTITUENCY” table , AFTER inserting a tuple into the “VOTERS” table.
+
+DELIMITER $$
+create trigger tname
+after insert on VOTER 
+for each row
+begin 
+update CONSTITUENCY set CONSTITUENCY.NO_OF_VOTES=CONSTITUENCY.NO_OF_VOTES+3 
+where CONSTITUENCY.CONST_ID=new.CONST_ID;
+end$$
+
+insert into VOTER
+(VOTER_ID,NAME,AGE,ADDR,CONST_ID,CAND_ID) 
+values
+('V8','MANISHA','25','PUTTUR','CT1','NC1');
+
++----------+-------------+-----------+-------------+
+| CONST_ID | NAME        | STATE     | NO_OF_VOTES |
++----------+-------------+-----------+-------------+
+| CT1      | PUTTUR      | KARNATAKA |         503 |
+| CT2      | BANTWALA    | KARNATAKA |         600 |
+| CT3      | MANJESHWARA | KERALA    |         700 |
++----------+-------------+-----------+-------------+
