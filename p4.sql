@@ -277,12 +277,12 @@ WHERE TOURIST_ID IN(
 
 iv. Display the details of the tourists visited at least one tourist place of the state, but visited
 all states tourist places.
-
+/*
 select DISTINCT STATE,TOURIST.TOURIST_ID
 from TPLACE, VISIT, TOURIST
 where VISIT.TOURIST_ID=TOURIST.TOURIST_ID 
 AND VISIT.PLACE_ID=TPLACE.PLACE_ID;
-
+*/
 
 
 SELECT * FROM TOURIST WHERE TOURIST_ID IN(
