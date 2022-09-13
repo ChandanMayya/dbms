@@ -70,7 +70,7 @@ create table VOTER(
 +----------+-------------+------+-----+---------+-------+
 
 CREATE TABLE CONTEST(
-    CONST_ID char(10) REFERENCES CONTEST(CONST_ID),
+    CONST_ID char(10) REFERENCES CONSTITUENCY(CONST_ID),
     CAND_ID CHAR(10) REFERENCES CANDIDATE(CAND_ID),
     PRIMARY KEY(CONST_ID,CAND_ID)
 );
