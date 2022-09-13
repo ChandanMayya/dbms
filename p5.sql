@@ -4,11 +4,9 @@ USE VP21MC005_parliment;
 create table CONSTITUENCY(
     CONST_ID char(10) PRIMARY KEY,
     NAME varchar(25) NOT NULL,
-    STATE (3)STATE VARCHAR(25) NOT NULL,
+    STATE VARCHAR(25) NOT NULL,
     NO_OF_VOTES INT(5)
 );
-
-ALTER TABLE CONSTITUENCY MODIFY STATE VARCHAR(25) NOT NULL;
 
 +-------------+-------------+------+-----+---------+-------+
 | Field       | Type        | Null | Key | Default | Extra |
